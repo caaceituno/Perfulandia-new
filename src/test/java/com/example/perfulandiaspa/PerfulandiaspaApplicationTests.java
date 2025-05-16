@@ -1,10 +1,10 @@
-package com.example.PerfumeriaSPA;
+package com.example.perfulandiaspa;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PerfumeriaSpaApplicationTests {
+class PerfulandiaspaApplicationTests {
 
 	@Test
 	void contextLoads() {

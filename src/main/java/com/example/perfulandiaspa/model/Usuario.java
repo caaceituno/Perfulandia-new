@@ -1,7 +1,4 @@
-package com.example.PerfumeriaSPA.Model;
-
-
-import java.math.BigInteger;
+package com.example.perfulandiaspa.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,12 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
-public class usuario {
-    private BigInteger id;
-    private String usermane;
+public class Usuario {
+    private int id;
+    private String username;
     private String password;
     private String email;
-    
-    
+    private boolean enabled;
+    private int rolId;
 }

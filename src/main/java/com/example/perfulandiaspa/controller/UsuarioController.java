@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
-
 @RestController
 @RequestMapping("api/v1/usuarios")
 public class UsuarioController {
@@ -31,43 +29,58 @@ public class UsuarioController {
     // obtener todos los usuarios
     @GetMapping
     public ResponseEntity<List<Usuario>> listarUsuarios() {
-        List<Usuario> usuarios = usuarioService.findAll();
-        return ResponseEntity.ok(usuarios);
+        try {
+            List<Usuario> usuarios = usuarioService.findAll();
+            return ResponseEntity.ok(usuarios);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     // crear un nuevo usuario (POST)
-    @PostMapping("/crear-usuario")
-    public ResponseEntity<Usuario> crearUsuario(@RequestBody Usuario usuario) {
-        Usuario nuevoUsuario = usuarioService.crearUsuario(usuario);
-        return ResponseEntity.status(HttpStatus.CREATED).body(nuevoUsuario);
+    @PostMapping("/registro-usuario")
+    public ResponseEntity<?> crearUsuario(@RequestBody Usuario usuario) {
+        try {
+            Usuario nuevoUsuario = usuarioService.crearUsuario(usuario);
+            return ResponseEntity.status(HttpStatus.CREATED).body(nuevoUsuario);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+        }
     }
 
     // eliminar un usuario por ID (DELETE)
     @DeleteMapping("/eliminar-usuario/{id}")
-    public ResponseEntity<Void> eliminarUsuario(@PathVariable int id) {
-        usuarioService.eliminarUsuario(id);
-        return ResponseEntity.noContent().build(); //204 si sale bien
+    public ResponseEntity<?> eliminarUsuario(@PathVariable int id) {
+        try {
+            usuarioService.eliminarUsuario(id);
+            return ResponseEntity.noContent().build(); //204 si sale bien
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage())); //404 si no se encuentra el usuario
+        }
     }
 
     // encontrar usuario por username
     @PostMapping("/encontrar-usuario")
     public ResponseEntity<?> buscarPorUsername(@RequestBody Map<String, String> body) {
         String username = body.get("username");
-
         try {
             Usuario usuario = usuarioService.encontrarPorUsername(username);
             return ResponseEntity.ok(usuario);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
         }
     }
 
     // editar un usuario por ID (PUT)
     @PutMapping("/editar-usuario/{id}")
-    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable int id, @RequestBody Usuario usuario) {
-        Usuario userActualizado = usuarioService.actualizarUsuario(id, usuario);
-        return ResponseEntity.ok(userActualizado);
+    public ResponseEntity<?> actualizarUsuario(@PathVariable int id, @RequestBody Usuario usuario) {
+        try {
+            Usuario userActualizado = usuarioService.actualizarUsuario(id, usuario);
+            return ResponseEntity.ok(userActualizado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+        }
+
     }
 
     //email
@@ -81,9 +94,7 @@ public class UsuarioController {
             Usuario actualizado = usuarioService.actualizarEmail(username, emailActual, nuevoEmail);
             return ResponseEntity.ok(actualizado);
         } catch (RuntimeException e) {
-            //si no encuentra el email o hay otro error
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body(Map.of("error", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
         }
     }
 
@@ -98,8 +109,7 @@ public class UsuarioController {
             Usuario actualizado = usuarioService.actualizarPass(username, passActual, nuevaPass);
             return ResponseEntity.ok(actualizado);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(Map.of("error", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
         }
     }
 

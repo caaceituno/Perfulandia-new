@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.perfulandiaspa.model.Vendedor;
-import com.example.perfulandiaspa.model.Cliente;
 import com.example.perfulandiaspa.model.Rol;
 import com.example.perfulandiaspa.model.Usuario;
 import com.example.perfulandiaspa.repository.VendedorRepository;

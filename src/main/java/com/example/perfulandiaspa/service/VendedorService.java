@@ -1,0 +1,68 @@
+package com.example.perfulandiaspa.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.perfulandiaspa.model.Vendedor;
+import com.example.perfulandiaspa.model.Cliente;
+import com.example.perfulandiaspa.model.Rol;
+import com.example.perfulandiaspa.model.Usuario;
+import com.example.perfulandiaspa.repository.VendedorRepository;
+import com.example.perfulandiaspa.repository.RolRepository;
+import com.example.perfulandiaspa.repository.UsuarioRepository;
+
+@Service
+public class VendedorService {
+
+    //trayendo dependencias necesarias
+    @Autowired
+    private VendedorRepository vendedorRepository;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+    @Autowired
+    private RolRepository rolRepository;
+
+    //recibiendo instancia de VendedorRepository como parámetro para asignar al atributo
+    public VendedorService(VendedorRepository vendedorRepository) {
+        this.vendedorRepository = vendedorRepository;
+    }
+
+    //metodo para obtener todos los clientes
+    public List<Vendedor> findAll() {
+        return vendedorRepository.findAll();
+    }
+
+    //crear solo vendedor (se necesita poner manualmente el id para asociar)
+    public Vendedor registroVendedor(Vendedor vendedor) {
+        return vendedorRepository.save(vendedor);
+    }
+
+    //registro usuario y vendedor
+    public Vendedor registrarUsuarioYVendedor(Vendedor vendedor) {
+        //asignando el rol de vendedor
+        Rol rolVendedor = rolRepository.findByNombre("VENDEDOR");
+        vendedor.getUsuario().setRol(rolVendedor);
+        vendedor.getUsuario().setEnabled(true);
+
+        //guardar el usuario
+        Usuario nuevoUsuario = usuarioRepository.save(vendedor.getUsuario());
+
+        //asociar el usuario al vendedor y guardar vendedor
+        vendedor.setUsuario(nuevoUsuario);
+        return vendedorRepository.save(vendedor);
+    }
+
+    //editar vendedor
+    public Vendedor actualizarVendedor(int id, Vendedor vendedorActualizado) {
+        Vendedor vendedorExistente = vendedorRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Vendedor con ID " + id + " no encontrado"));
+
+        vendedorExistente.setNombreCompleto(vendedorActualizado.getNombreCompleto());
+        vendedorExistente.setSucursal(vendedorActualizado.getSucursal());
+        vendedorExistente.setMetaMensual(vendedorActualizado.getMetaMensual());
+
+        return vendedorRepository.save(vendedorExistente);
+    }
+}

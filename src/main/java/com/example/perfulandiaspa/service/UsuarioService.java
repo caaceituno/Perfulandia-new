@@ -48,7 +48,6 @@ public class UsuarioService {
         usuarioExistente.setPassword(usuarioActualizado.getPassword());
         usuarioExistente.setEmail(usuarioActualizado.getEmail());
         usuarioExistente.setEnabled(usuarioActualizado.isEnabled());
-        usuarioExistente.setRol(usuarioActualizado.getRol());
 
         return usuarioRepository.save(usuarioExistente);
     }

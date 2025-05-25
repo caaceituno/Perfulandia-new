@@ -23,5 +23,17 @@ public class InventarioService {
     public List<Inventario> findAll() {
         return inventarioRepository.findAll();
     }
+    //metodo para eliminar el inventario
+    public void eliminarInventario(int id) {
+        throw new UnsupportedOperationException("Unimplemented method 'eliminarInventario'");
+    }
+    //metodo para guardar el inventario
+    public Inventario guardarInventario(Inventario inventario) {
+        throw new UnsupportedOperationException("Unimplemented method 'guardarInventario'");
+    }
+    //metodo para actualizar el inventario
+    public Inventario actualizarInventario(Inventario inventario) {
+        throw new UnsupportedOperationException("Unimplemented method 'actualizarInventario'");
+    }
 
 }

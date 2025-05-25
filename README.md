@@ -1,3 +1,4 @@
 # Perfulandia
-#Microservicio Gestion de usuarios:
-Crear, actualizar, desactivar y eliminar cuentas de usuarios del sistema.
+#Microservicio Gestion de Inventario:
+Crear, actualizar, eliminar productos.
+Crear, actualizar, eliminar productos del inventario.

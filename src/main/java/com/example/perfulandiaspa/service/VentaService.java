@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import com.example.perfulandiaspa.model.DetalleVenta;
 import com.example.perfulandiaspa.model.Venta;
 import com.example.perfulandiaspa.repository.VentaRepository;
 
+@SuppressWarnings("unchecked")
 @Service
 public class VentaService {
 
@@ -28,6 +30,9 @@ public class VentaService {
 
     @Value("${vendedor.service.url}")
     private String vendedorServiceUrl;
+
+    @Value("${productos.service.url}")
+    private String productosServiceUrl;
 
     //recibiendo instancia de VentaRepository como parámetro para asignar al atributo
     public VentaService(VentaRepository ventaRepository) {
@@ -52,6 +57,15 @@ public class VentaService {
                 String vendedorUrl = vendedorServiceUrl + "/" + venta.getVendedorId();
                 Map<String, Object> vendedorDetalles = restTemplate.getForObject(vendedorUrl, Map.class);
                 venta.setVendedorDetalles(vendedorDetalles);
+
+                if (venta.getDetalles() != null) {
+                    for (DetalleVenta detalle : venta.getDetalles()) {
+                        String productoUrl = productosServiceUrl + "/" + detalle.getProductoId();
+
+                        Map<String, Object> productosDetalles = restTemplate.getForObject(productoUrl, Map.class);
+                        detalle.setProductoDetalles(productosDetalles);
+                    }
+                }
 
             } catch (Exception e) {
                 throw new RuntimeException();
@@ -78,6 +92,15 @@ public class VentaService {
                 String vendedorUrl = vendedorServiceUrl + "/" + venta.getVendedorId();
                 Map<String, Object> vendedorDetalles = restTemplate.getForObject(vendedorUrl, Map.class);
                 venta.setVendedorDetalles(vendedorDetalles);
+
+                if (venta.getDetalles() != null) {
+                    for (DetalleVenta detalle : venta.getDetalles()) {
+                        String productoUrl = productosServiceUrl + "/" + detalle.getProductoId();
+
+                        Map<String, Object> productosDetalles = restTemplate.getForObject(productoUrl, Map.class);
+                        detalle.setProductoDetalles(productosDetalles);
+                    }
+                }
 
             } catch (Exception e) {
                 throw new RuntimeException("Error al obtener detalles de cliente o vendedor", e);
@@ -121,6 +144,28 @@ public class VentaService {
         } catch (Exception e) {
             throw new RuntimeException("Error al contactar al servicio de vendedores");
         }
+
+        //vincular detalles de venta y obtener precio de producto
+        if (venta.getDetalles() != null) {
+            for (DetalleVenta detalles : venta.getDetalles()) {
+                detalles.setVenta(venta);
+                // Obtener precio del producto desde microservicio
+                String productoUrl = productosServiceUrl + "/" + detalles.getProductoId();
+                try {
+                    Map<String, Object> producto = restTemplate.getForObject(productoUrl, Map.class);
+                    if (producto == null || producto.get("precio") == null) {
+                        throw new RuntimeException("Producto no encontrado o sin precio");
+                    }
+                    java.math.BigDecimal precioDecimal = new java.math.BigDecimal(producto.get("precio").toString());
+                    detalles.setPrecioUnitario(precioDecimal.toBigInteger());
+                } catch (Exception e) {
+                    throw new RuntimeException("Error al obtener precio del producto con ID: " + detalles.getProductoId(), e);
+                }
+            }
+        }
+
+        // Calcular el total de la venta
+        venta.calcularTotal();
 
         return ventaRepository.save(venta);
     }

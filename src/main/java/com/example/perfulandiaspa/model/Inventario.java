@@ -28,8 +28,8 @@ public class Inventario {
     private Producto producto;
 
     @Column(name = "cantidad")
-    private int cantidad;
+    private Integer cantidad;
 
-    @Column(name = "ubicacion")
-    private String ubicacion;
+    @Column(name = "sucursal")
+    private String sucursal;
 }

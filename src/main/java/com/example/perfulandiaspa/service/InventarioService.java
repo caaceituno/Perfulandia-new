@@ -23,17 +23,42 @@ public class InventarioService {
     public List<Inventario> findAll() {
         return inventarioRepository.findAll();
     }
-    //metodo para eliminar el inventario
+
+    //metodo para encontrar un inventario por id
+    public Inventario findById(int id) {
+        return inventarioRepository.findById(id).orElse(null);
+    }
+
+    //metodo para guardar un inventario
+    public Inventario registroInventario(Inventario inventario) {
+        return inventarioRepository.save(inventario);
+    }
+
+    //borra el inventario con ID
     public void eliminarInventario(int id) {
-        throw new UnsupportedOperationException("Unimplemented method 'eliminarInventario'");
+        inventarioRepository.deleteById(id);
     }
-    //metodo para guardar el inventario
-    public Inventario guardarInventario(Inventario inventario) {
-        throw new UnsupportedOperationException("Unimplemented method 'guardarInventario'");
-    }
-    //metodo para actualizar el inventario
-    public Inventario actualizarInventario(Inventario inventario) {
-        throw new UnsupportedOperationException("Unimplemented method 'actualizarInventario'");
+
+    // Actualizar todos los campos editables de un inventario existente
+    public Inventario actualizarInventario(int id, Inventario inventarioActualizado) {
+        Inventario inventarioExistente = inventarioRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Inventario con ID " + id + " no encontrado"));
+            
+        if (inventarioActualizado.getCantidad() != null) {
+            if (inventarioActualizado.getCantidad() < 0) {
+                throw new IllegalArgumentException("La cantidad no puede ser negativa");
+            }
+            inventarioExistente.setCantidad(inventarioActualizado.getCantidad());
+        }
+        
+        if (inventarioActualizado.getProducto() != null) {
+            inventarioExistente.setProducto(inventarioActualizado.getProducto());
+        }
+        if (inventarioActualizado.getSucursal() != null) {
+            inventarioExistente.setSucursal(inventarioActualizado.getSucursal());
+        }
+
+        return inventarioRepository.save(inventarioExistente);
     }
 
 }

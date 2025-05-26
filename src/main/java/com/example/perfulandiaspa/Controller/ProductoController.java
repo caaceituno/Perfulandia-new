@@ -58,11 +58,11 @@ public class ProductoController {
         } 
     }
 
-    // editar un cliente por ID (PUT)
+    // editar un producto por ID (PUT)
     @PutMapping("/editar-producto/{id}")
     public ResponseEntity<?> actualizarCliente(@PathVariable int id, @RequestBody Producto producto) {
         try {
-            producto.setId(id); // Asegúrate de que el producto tenga el ID correcto
+            producto.setId(id);
             Producto productoActualizado = productoService.actualizarProducto(producto);
             return ResponseEntity.ok(productoActualizado);
         } catch (RuntimeException e) {

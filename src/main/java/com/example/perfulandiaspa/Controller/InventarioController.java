@@ -1,4 +1,4 @@
-package com.example.perfulandiaspa.Controller;
+package com.example.perfulandiaspa.controller;
 
 import java.util.List;
 import java.util.Map;

@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class Inventario {
     private int id;
     private int productoId;
-    private int cantidad;
-    private String ubicacion;
+    private Integer cantidad;
+    private String sucursal;
 }

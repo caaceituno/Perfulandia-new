@@ -1,4 +1,4 @@
-package com.example.perfulandiaspa.model;
+/*package com.example.perfulandiaspa.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,4 +14,4 @@ public class Cliente {
     private String rut;
     private String telefono;
     private String direccion;
-}
+}*/

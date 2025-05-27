@@ -180,43 +180,53 @@ public class VentaService {
         Venta ventaExistente = ventaRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Venta con ID " + id + " no encontrada"));
 
-        //Validacion cliente
-        String clienteUrl = clienteServiceUrl + "/" + ventaActualizada.getClienteId();
+        if (ventaActualizada.getClienteId() > 0) {
+            //Validacion cliente
+            String clienteUrl = clienteServiceUrl + "/" + ventaActualizada.getClienteId();
 
-        //control de excepciones al llamar al servicio de cliente por si no está disponible
-        try {
-            Object cliente = restTemplate.getForObject(clienteUrl, Object.class);
+            //control de excepciones al llamar al servicio de cliente por si no está disponible
+            try {
+                Object cliente = restTemplate.getForObject(clienteUrl, Object.class);
 
-            if (cliente == null) {
+                if (cliente == null) {
+                    throw new RuntimeException("Cliente no encontrado");
+                }
+                ventaExistente.setClienteId(ventaActualizada.getClienteId());
+            } catch (HttpClientErrorException.NotFound e) {
                 throw new RuntimeException("Cliente no encontrado");
+            } catch (Exception e) {
+                throw new RuntimeException("Error al contactar al servicio de clientes");
             }
-        } catch (HttpClientErrorException.NotFound e) {
-            throw new RuntimeException("Cliente no encontrado");
-        } catch (Exception e) {
-            throw new RuntimeException("Error al contactar al servicio de clientes");
         }
 
-        //validacion vendedor
-        String vendedorUrl = vendedorServiceUrl + "/" + ventaActualizada.getVendedorId();
+        if (ventaActualizada.getVendedorId() > 0) {
+            //validacion vendedor
+            String vendedorUrl = vendedorServiceUrl + "/" + ventaActualizada.getVendedorId();
 
-        //control de excepciones al llamar al servicio de vendedor por si no está disponible
-        try {
-            Object vendedor = restTemplate.getForObject(vendedorUrl, Object.class);
+            //control de excepciones al llamar al servicio de vendedor por si no está disponible
+            try {
+                Object vendedor = restTemplate.getForObject(vendedorUrl, Object.class);
 
-            if (vendedor == null) {
+                if (vendedor == null) {
+                    throw new RuntimeException("Vendedor no encontrado");
+                }
+                ventaExistente.setVendedorId(ventaActualizada.getVendedorId());
+            } catch (HttpClientErrorException.NotFound e) {
                 throw new RuntimeException("Vendedor no encontrado");
+            } catch (Exception e) {
+                throw new RuntimeException("Error al contactar al servicio de vendedores");
             }
-        } catch (HttpClientErrorException.NotFound e) {
-            throw new RuntimeException("Vendedor no encontrado");
-        } catch (Exception e) {
-            throw new RuntimeException("Error al contactar al servicio de vendedores");
-        }
 
+        }
         //updates
-        ventaExistente.setClienteId(ventaActualizada.getClienteId());
-        ventaExistente.setVendedorId(ventaActualizada.getVendedorId());
-        ventaExistente.setFecha(ventaActualizada.getFecha());
-        ventaExistente.setTotal(ventaActualizada.getTotal());
+        //actualizar fecha si viene no nulo
+        if (ventaActualizada.getFecha() != null) {
+            ventaExistente.setFecha(ventaActualizada.getFecha());
+        }
+        //actualizar total si viene no nulo
+        if (ventaActualizada.getTotal() != null) {
+            ventaExistente.setTotal(ventaActualizada.getTotal());
+        }
 
         return ventaRepository.save(ventaExistente);
     }

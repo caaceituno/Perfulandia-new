@@ -69,7 +69,7 @@ public class DetalleVentaController {
     }
 
     //obtener detalles de ventas por ID completo
-    @GetMapping("/detalles/{id}")
+    @GetMapping("/{id}/detalles")
     public ResponseEntity<?> obtenerDetalleVentaYDetallesProductosPorId(@PathVariable int id) {
         try {
             Optional<DetalleVenta> detalleVentaCompleto = detalleVentaService.obtenerDetalleVentaYDetallesProductosPorId(id);

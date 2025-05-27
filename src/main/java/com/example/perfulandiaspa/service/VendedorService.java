@@ -44,6 +44,11 @@ public class VendedorService {
         return vendedorRepository.save(vendedor);
     }
 
+    //eliminar un vendedor por ID
+    public void eliminarVendedor(int id) {
+        usuarioRepository.deleteById(id);
+    }
+
     //registro usuario y vendedor
     public Vendedor registrarUsuarioYVendedor(Vendedor vendedor) {
         //asignando el rol de vendedor

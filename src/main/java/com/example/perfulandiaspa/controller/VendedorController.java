@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,7 +52,7 @@ public class VendedorController {
         }
     }
 
-    // crear un nuevo vendedor
+    //crear un nuevo vendedor
     @PostMapping
     public ResponseEntity<?> registroCompleto(@RequestBody Vendedor vendedor) {
         try {
@@ -62,7 +63,18 @@ public class VendedorController {
         }
     }
 
-    // editar un usuario por ID (PUT)
+    //eliminar un vendedor por ID
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminarVendedor(@PathVariable int id) {
+        try {
+            vendedorService.eliminarVendedor(id);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
+        } 
+    }
+
+    //editar un usuario por ID (PUT)
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizarVendedor(@PathVariable int id, @RequestBody Vendedor vendedor) {
         try {

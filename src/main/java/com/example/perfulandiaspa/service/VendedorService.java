@@ -1,6 +1,7 @@
 package com.example.perfulandiaspa.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,11 @@ public class VendedorService {
         return vendedorRepository.findAll();
     }
 
+    //metodo para obtener un vendedor por ID
+    public Optional<Vendedor> findById(int id) {
+        return vendedorRepository.findById(id);
+    }
+
     //crear solo vendedor (se necesita poner manualmente el id para asociar)
     public Vendedor registroVendedor(Vendedor vendedor) {
         return vendedorRepository.save(vendedor);
@@ -58,9 +64,17 @@ public class VendedorService {
         Vendedor vendedorExistente = vendedorRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Vendedor con ID " + id + " no encontrado"));
 
-        vendedorExistente.setNombreCompleto(vendedorActualizado.getNombreCompleto());
-        vendedorExistente.setSucursal(vendedorActualizado.getSucursal());
-        vendedorExistente.setMetaMensual(vendedorActualizado.getMetaMensual());
+        if (vendedorActualizado.getNombreCompleto() != null) {
+            vendedorExistente.setNombreCompleto(vendedorActualizado.getNombreCompleto());
+        }
+
+        if (vendedorActualizado.getSucursal() != null) {
+            vendedorExistente.setSucursal(vendedorActualizado.getSucursal());
+        }
+
+        if (vendedorActualizado.getMetaMensual() > 0) {
+            vendedorExistente.setMetaMensual(vendedorActualizado.getMetaMensual());
+        }
 
         return vendedorRepository.save(vendedorExistente);
     }

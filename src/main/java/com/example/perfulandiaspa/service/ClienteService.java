@@ -1,6 +1,7 @@
 package com.example.perfulandiaspa.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,13 +37,13 @@ public class ClienteService {
         return clienteRepository.findAll();
     }
 
-    //crear solo cliente (se necesita poner manualmente el id para asociar)
-    public Cliente registroCliente(Cliente cliente) {
-        return clienteRepository.save(cliente);
+    //metodo para obtener un cliente por ID
+    public Optional<Cliente> findById(int id) {
+        return clienteRepository.findById(id);
     }
 
     //registro usuario y cliente
-    public Cliente registrarUsuarioYCliente(Cliente cliente) {
+    public Cliente crearCliente(Cliente cliente) {
         //asignando el rol de cliente
         Rol rolCliente = rolRepository.findByNombre("CLIENTE");
         cliente.getUsuario().setRol(rolCliente);
@@ -55,15 +56,10 @@ public class ClienteService {
         cliente.setUsuario(nuevoUsuario);
         return clienteRepository.save(cliente);
     }
-
-    //eliminar cliente
-    public void eliminarCliente(int id) {
-        clienteRepository.deleteById(id);
-    }
     
     //eliminar cliente y usuario asociado
-    @Transactional//si falla una eliminacion se revierten todas para que la base de datos quede limpia y consistente.
-    public void eliminarClienteYUsuario(int clienteId) {
+    @Transactional//si falla una eliminacion se revierten todas para que la base de datos quede limpia
+    public void eliminarCliente(int clienteId) {
         //buscar el cliente por su ID
         Cliente cliente = clienteRepository.findById(clienteId)
             .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + clienteId));
@@ -71,24 +67,37 @@ public class ClienteService {
         //obtener el usuario asociado al cliente
         Usuario usuario = cliente.getUsuario();
         
-        //primero eliminar el cliente para evitar problemas de integridad referencial
+        //primero eliminar el cliente para evitar problemas
         clienteRepository.deleteById(clienteId);
         
-        //si existe un usuario asociado, eliminarlo
+        //si existe un usuario asociado se elimina
         if (usuario != null) {
             usuarioRepository.deleteById(usuario.getId());
         }
     }
 
+    @Transactional
     //editar cliente
     public Cliente actualizarCliente(int id, Cliente clienteActualizado) {
         Cliente clienteExistente = clienteRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Cliente con ID " + id + " no encontrado"));
 
-        clienteExistente.setNombreCompleto(clienteActualizado.getNombreCompleto());
-        clienteExistente.setRut(clienteActualizado.getRut());
-        clienteExistente.setTelefono(clienteActualizado.getTelefono());
-        clienteExistente.setDireccion(clienteActualizado.getDireccion());
+        //actualizando los campos del cliente
+        if (clienteActualizado.getNombreCompleto() != null) {
+            clienteExistente.setNombreCompleto(clienteActualizado.getNombreCompleto());
+        }
+
+        if (clienteActualizado.getRut() != null) {
+            clienteExistente.setRut(clienteActualizado.getRut());
+        }
+
+        if (clienteActualizado.getTelefono() != null) {
+            clienteExistente.setTelefono(clienteActualizado.getTelefono());
+        }
+
+        if (clienteActualizado.getDireccion() != null) {
+            clienteExistente.setDireccion(clienteActualizado.getDireccion());
+        }
 
         return clienteRepository.save(clienteExistente);
     }

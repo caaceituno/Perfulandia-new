@@ -2,6 +2,7 @@ package com.example.perfulandiaspa.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,22 +37,26 @@ public class ClienteController {
         }
     }
 
-    // crear un nuevo cliente
-    @PostMapping("/registro-cliente")
-    public ResponseEntity<?> registroCompleto(@RequestBody Cliente cliente) {
+    //obtener un cliente por ID
+    @GetMapping("/{id}")
+    public ResponseEntity<?> obtenerClientePorId(@PathVariable int id) {
         try {
-            Cliente nuevoCliente = clienteService.registrarUsuarioYCliente(cliente);
-            return ResponseEntity.status(HttpStatus.CREATED).body(nuevoCliente);
+            Optional<Cliente> cliente = clienteService.findById(id);
+            if (cliente.isPresent()) {
+                return ResponseEntity.ok(cliente.get());
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado");
+            }
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    // crear solo cliente (requiere usuario ya existente)
-    @PostMapping("/registro-cliente-id")
-    public ResponseEntity<?> registroCliente(@RequestBody Cliente cliente) {
+    // crear un nuevo cliente
+    @PostMapping
+    public ResponseEntity<?> registroCompleto(@RequestBody Cliente cliente) {
         try {
-            Cliente nuevoCliente = clienteService.registroCliente(cliente);
+            Cliente nuevoCliente = clienteService.crearCliente(cliente);
             return ResponseEntity.status(HttpStatus.CREATED).body(nuevoCliente);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
@@ -59,10 +64,10 @@ public class ClienteController {
     }
 
     //eliminar un cliente y su usuario asociado por ID (DELETE)
-    @DeleteMapping("/eliminar-cliente/{id}")
-    public ResponseEntity<?> eliminarClienteYUsuario(@PathVariable int id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminarCliente(@PathVariable int id) {
         try {
-            clienteService.eliminarClienteYUsuario(id);
+            clienteService.eliminarCliente(id);
             return ResponseEntity.noContent().build(); // 204 si sale bien
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage())); //404 si no se encuentra el cliente
@@ -70,7 +75,7 @@ public class ClienteController {
     }
 
     // editar un cliente por ID (PUT)
-    @PutMapping("/editar-cliente/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> actualizarCliente(@PathVariable int id, @RequestBody Cliente cliente) {
         try {
             Cliente clienteActualizado = clienteService.actualizarCliente(id, cliente);

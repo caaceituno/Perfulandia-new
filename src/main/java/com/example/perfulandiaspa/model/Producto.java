@@ -1,5 +1,7 @@
 package com.example.perfulandiaspa.model;
 
+import java.math.BigInteger;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +25,7 @@ public class Producto {
     private String descripcion;
 
     @Column(name = "precio", nullable = false)
-    private float precio;
+    private BigInteger precio;
 
     @Column(name = "categoria")
     private String categoria;

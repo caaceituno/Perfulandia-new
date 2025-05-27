@@ -39,7 +39,7 @@ public class InventarioService {
         inventarioRepository.deleteById(id);
     }
 
-    // Actualizar todos los campos editables de un inventario existente
+    //actualizar inventario existente
     public Inventario actualizarInventario(int id, Inventario inventarioActualizado) {
         Inventario inventarioExistente = inventarioRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Inventario con ID " + id + " no encontrado"));

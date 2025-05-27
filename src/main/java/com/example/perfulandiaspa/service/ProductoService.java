@@ -1,6 +1,7 @@
 package com.example.perfulandiaspa.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,11 @@ public class ProductoService {
         return productoRepository.findAll();
     }
 
+    //metodo para obtener una venta por ID
+    public Optional<Producto> findById(int id) {
+        return productoRepository.findById(id);
+    }
+
     //metodo para guardar un producto
     public Producto guardarProducto(Producto producto) {
         return productoRepository.save(producto);
@@ -34,8 +40,27 @@ public class ProductoService {
         productoRepository.deleteById(id);
     }
 
-    //actualizar producto
-    public Producto actualizarProducto(Producto producto) {
-        return productoRepository.save(producto);
+    //actualizar producto (solo campos enviados)
+    public Producto actualizarProducto(int id, Producto producto) {
+        Producto productoExistente = productoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Producto con ID " + id + " no encontrado"));
+
+        //actualizar solo los campos que no son nulos
+        if (producto.getNombre() != null) {
+            productoExistente.setNombre(producto.getNombre());
+        }
+        if (producto.getDescripcion() != null) {
+            productoExistente.setDescripcion(producto.getDescripcion());
+        }
+        if (producto.getPrecio() != null) {
+            productoExistente.setPrecio(producto.getPrecio());
+        }
+        if (producto.getCategoria() != null) {
+            productoExistente.setCategoria(producto.getCategoria());
+        }
+        if (producto.getMarca() != null) {
+            productoExistente.setMarca(producto.getMarca());
+        }
+        return productoRepository.save(productoExistente);
     }
 }

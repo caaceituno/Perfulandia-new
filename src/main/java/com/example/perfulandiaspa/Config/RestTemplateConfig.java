@@ -1,4 +1,4 @@
-package com.example.perfulandiaspa.Config;
+package com.example.perfulandiaspa.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

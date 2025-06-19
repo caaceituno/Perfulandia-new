@@ -51,6 +51,7 @@ public class VentaService {
         for (Venta venta : ventas) {
             try {
                 String clienteUrl = clienteServiceUrl + "/" + venta.getClienteId();
+
                 Map<String, Object> clienteDetalles = restTemplate.getForObject(clienteUrl, Map.class);
                 venta.setClienteDetalles(clienteDetalles);
 

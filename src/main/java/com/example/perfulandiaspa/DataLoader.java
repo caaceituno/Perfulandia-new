@@ -5,10 +5,10 @@ import com.example.perfulandiaspa.repository.*;
 import net.datafaker.Faker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-//import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-//@Profile("dev")
+@Profile("test")
 @Component
 public class DataLoader implements CommandLineRunner {
 

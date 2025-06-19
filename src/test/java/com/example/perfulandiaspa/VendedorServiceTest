@@ -1,0 +1,127 @@
+package com.example.perfulandiaspa.service;
+
+import com.example.perfulandiaspa.model.Usuario;
+import com.example.perfulandiaspa.model.Rol;
+import com.example.perfulandiaspa.model.Vendedor;
+import com.example.perfulandiaspa.repository.UsuarioRepository;
+import com.example.perfulandiaspa.repository.VendedorRepository;
+import com.example.perfulandiaspa.repository.RolRepository;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import java.util.Optional;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+public class VendedorServiceTest {
+
+    private VendedorRepository vendedorRepository;
+    private UsuarioRepository usuarioRepository;
+    private RolRepository rolRepository;
+    private VendedorService vendedorService;
+
+    @BeforeEach
+    void setUp() {
+        vendedorRepository = mock(VendedorRepository.class);
+        usuarioRepository = mock(UsuarioRepository.class);
+        rolRepository = mock(RolRepository.class);
+        vendedorService = new VendedorService(vendedorRepository);
+        vendedorService.usuarioRepository = usuarioRepository;
+        vendedorService.rolRepository = rolRepository;
+    }
+
+    @Test
+    void testFindAll() {
+        Vendedor v1 = new Vendedor();
+        v1.setNombreCompleto("Ana");
+        Vendedor v2 = new Vendedor();
+        v2.setNombreCompleto("Luis");
+
+        when(vendedorRepository.findAll()).thenReturn(Arrays.asList(v1, v2));
+
+        List<Vendedor> resultado = vendedorService.findAll();
+
+        assertEquals(2, resultado.size());
+        assertEquals("Ana", resultado.get(0).getNombreCompleto());
+    }
+
+    @Test
+    void testFindById() {
+        Vendedor vendedor = new Vendedor();
+        vendedor.setNombreCompleto("Carlos");
+
+        when(vendedorRepository.findById(1)).thenReturn(Optional.of(vendedor));
+
+        Optional<Vendedor> resultado = vendedorService.findById(1);
+
+        assertTrue(resultado.isPresent());
+        assertEquals("Carlos", resultado.get().getNombreCompleto());
+    }
+
+    @Test
+    void testRegistroVendedor() {
+        Vendedor vendedor = new Vendedor();
+        vendedor.setNombreCompleto("Pedro");
+
+        when(vendedorRepository.save(vendedor)).thenReturn(vendedor);
+
+        Vendedor guardado = vendedorService.registroVendedor(vendedor);
+
+        assertEquals("Pedro", guardado.getNombreCompleto());
+        verify(vendedorRepository, times(1)).save(vendedor);
+    }
+
+    @Test
+    void testEliminarVendedor() {
+        vendedorService.eliminarVendedor(10);
+        verify(usuarioRepository, times(1)).deleteById(10);
+    }
+
+    @Test
+    void testRegistrarUsuarioYVendedor() {
+        Vendedor vendedor = new Vendedor();
+        Usuario usuario = new Usuario();
+        vendedor.setUsuario(usuario);
+
+        Rol rol = new Rol();
+        rol.setNombre("VENDEDOR");
+
+        when(rolRepository.findByNombre("VENDEDOR")).thenReturn(rol);
+        when(usuarioRepository.save(usuario)).thenReturn(usuario);
+        when(vendedorRepository.save(vendedor)).thenReturn(vendedor);
+
+        Vendedor resultado = vendedorService.registrarUsuarioYVendedor(vendedor);
+
+        assertTrue(resultado.getUsuario().isEnabled());
+        assertEquals("VENDEDOR", resultado.getUsuario().getRol().getNombre());
+        verify(usuarioRepository, times(1)).save(usuario);
+        verify(vendedorRepository, times(1)).save(vendedor);
+    }
+
+    @Test
+    void testActualizarVendedor() {
+        Vendedor existente = new Vendedor();
+        existente.setNombreCompleto("Antiguo");
+        existente.setSucursal("Sucursal A");
+        existente.setMetaMensual(1000);
+
+        Vendedor actualizado = new Vendedor();
+        actualizado.setNombreCompleto("Nuevo");
+        actualizado.setSucursal("Sucursal B");
+        actualizado.setMetaMensual(2000);
+
+        when(vendedorRepository.findById(1)).thenReturn(Optional.of(existente));
+        when(vendedorRepository.save(any(Vendedor.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        Vendedor resultado = vendedorService.actualizarVendedor(1, actualizado);
+
+        assertEquals("Nuevo", resultado.getNombreCompleto());
+        assertEquals("Sucursal B", resultado.getSucursal());
+        assertEquals(2000, resultado.getMetaMensual());
+    }
+}

@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.perfulandiaspa.model.Producto;
 import com.example.perfulandiaspa.service.ProductoService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 @RestController
 @RequestMapping("api/v1/productos")
 public class ProductoController {
@@ -27,6 +31,8 @@ public class ProductoController {
     private ProductoService productoService;
 
     // obtener todos los productos
+    @Operation(summary = "Listar todos los productos")
+    @ApiResponse(responseCode = "200", description = "Productos listados correctamente")
     @GetMapping
     public ResponseEntity<List<Producto>> listarProductos() {
         try {
@@ -38,6 +44,11 @@ public class ProductoController {
     }
 
     //obtener un producto por ID
+    @Operation(summary = "Obtener un producto por ID")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Producto encontrado"),
+        @ApiResponse(responseCode = "404", description = "Producto no encontrado")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerProductoPorId(@PathVariable int id) {
         try {
@@ -53,6 +64,11 @@ public class ProductoController {
     }
 
     // crear un nuevo producto
+    @Operation(summary = "Registrar un nuevo producto")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Producto creado"),
+        @ApiResponse(responseCode = "400", description = "Datos inválidos")
+    })
     @PostMapping
     public ResponseEntity<?> registroProducto(@RequestBody Producto producto) {
         try {
@@ -64,6 +80,11 @@ public class ProductoController {
     }
 
     //eliminar un producto por ID
+    @Operation(summary = "Eliminar un producto por ID")
+    @ApiResponses({
+        @ApiResponse(responseCode = "204", description = "Producto eliminado"),
+        @ApiResponse(responseCode = "404", description = "Producto no encontrado")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarProducto(@PathVariable int id) {
         try {
@@ -75,6 +96,11 @@ public class ProductoController {
     }
 
     // editar un producto por ID (PUT)
+    @Operation(summary = "Actualizar un producto por ID")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Producto actualizado correctamente"),
+        @ApiResponse(responseCode = "400", description = "Datos inválidos")
+    })
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizarProducto(@PathVariable int id, @RequestBody Producto producto) {
         try {

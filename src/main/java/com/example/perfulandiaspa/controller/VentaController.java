@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import com.example.perfulandiaspa.model.Venta;
 import com.example.perfulandiaspa.service.VentaService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 @RestController
 @RequestMapping("api/v1/ventas")
 public class VentaController {
@@ -20,6 +24,8 @@ public class VentaController {
     private VentaService ventaService;
 
     //obtener todas las ventas
+    @Operation(summary = "Listar todas las ventas")
+    @ApiResponse(responseCode = "200", description = "Ventas listadas correctamente")
     @GetMapping
     public ResponseEntity<?> listarVentas() {
         try {
@@ -34,6 +40,8 @@ public class VentaController {
     }
 
     //obtener todas las ventas con detalles
+    @Operation(summary = "Listar todas las ventas con sus detalles")
+    @ApiResponse(responseCode = "200", description = "Ventas con detalles listadas correctamente")
     @GetMapping("/detalles")
     public ResponseEntity<?> listarVentasYDetalles() {
         try {
@@ -48,6 +56,11 @@ public class VentaController {
     }
 
     //obtener venta por ID
+    @Operation(summary = "Obtener venta por ID")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Venta encontrada"),
+        @ApiResponse(responseCode = "404", description = "Venta no encontrada")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerVentaPorId(@PathVariable int id) {
         try {
@@ -63,6 +76,11 @@ public class VentaController {
     }
 
     //obtener ventas por ID con detalles
+    @Operation(summary = "Obtener venta por ID con detalles (cliente, vendedor, productos)")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Venta con detalles encontrada"),
+        @ApiResponse(responseCode = "404", description = "Venta no encontrada")
+    })
     @GetMapping("/detalles/{id}")
     public ResponseEntity<?> obtenerVentaConDetallesPorId(@PathVariable int id) {
         try {
@@ -78,6 +96,11 @@ public class VentaController {
     }
 
     //crear una nueva venta
+    @Operation(summary = "Registrar una nueva venta")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Venta registrada exitosamente"),
+        @ApiResponse(responseCode = "400", description = "Error al registrar la venta")
+    })
     @PostMapping
     public ResponseEntity<?> registroVenta(@RequestBody Venta venta) {
         try {
@@ -89,6 +112,11 @@ public class VentaController {
     }
     
     //eliminar una venta por ID
+    @Operation(summary = "Eliminar una venta por ID")
+    @ApiResponses({
+        @ApiResponse(responseCode = "204", description = "Venta eliminada correctamente"),
+        @ApiResponse(responseCode = "404", description = "Venta no encontrada")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarVenta(@PathVariable int id) {
         try {
@@ -100,6 +128,11 @@ public class VentaController {
     }
 
     //editar una venta por ID (PUT)
+    @Operation(summary = "Actualizar una venta por ID")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Venta actualizada correctamente"),
+        @ApiResponse(responseCode = "400", description = "Error al actualizar la venta")
+    })
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizarVenta(@PathVariable int id, @RequestBody Venta venta) {
         try {

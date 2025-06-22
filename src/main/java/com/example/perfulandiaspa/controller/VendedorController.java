@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.perfulandiaspa.model.Vendedor;
 import com.example.perfulandiaspa.service.VendedorService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 @RestController
 @RequestMapping("api/v1/vendedores")
 public class VendedorController {
@@ -27,6 +30,7 @@ public class VendedorController {
     private VendedorService vendedorService;
 
     // obtener todos los vendedores
+    @Operation(summary = "Listar todos los vendedores")
     @GetMapping
     public ResponseEntity<List<Vendedor>> listarVendedores() {
         try {
@@ -38,6 +42,9 @@ public class VendedorController {
     }
 
     //obtener un vendedor por ID
+    @Operation(summary = "Obtener un vendedor por ID")
+    @ApiResponse(responseCode = "200", description = "Vendedor encontrado")
+    @ApiResponse(responseCode = "404", description = "Vendedor no encontrado")
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerVendedorPorId(@PathVariable int id) {
         try {
@@ -53,6 +60,9 @@ public class VendedorController {
     }
 
     //crear un nuevo vendedor
+    @Operation(summary = "Registrar un nuevo vendedor")
+    @ApiResponse(responseCode = "201", description = "Vendedor registrado exitosamente")
+    @ApiResponse(responseCode = "400", description = "Error en los datos enviados")
     @PostMapping
     public ResponseEntity<?> registroCompleto(@RequestBody Vendedor vendedor) {
         try {
@@ -64,6 +74,9 @@ public class VendedorController {
     }
 
     //eliminar un vendedor por ID
+    @Operation(summary = "Eliminar un vendedor por ID")
+    @ApiResponse(responseCode = "204", description = "Vendedor eliminado exitosamente")
+    @ApiResponse(responseCode = "404", description = "Vendedor no encontrado")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarVendedor(@PathVariable int id) {
         try {
@@ -75,6 +88,9 @@ public class VendedorController {
     }
 
     //editar un usuario por ID (PUT)
+    @Operation(summary = "Actualizar un vendedor por ID")
+    @ApiResponse(responseCode = "200", description = "Vendedor actualizado exitosamente")
+    @ApiResponse(responseCode = "400", description = "Error en los datos enviados")
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizarVendedor(@PathVariable int id, @RequestBody Vendedor vendedor) {
         try {

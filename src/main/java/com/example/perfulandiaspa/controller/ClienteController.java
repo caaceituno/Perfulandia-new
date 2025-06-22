@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.perfulandiaspa.model.Cliente;
 import com.example.perfulandiaspa.service.ClienteService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 @RestController
 @RequestMapping("api/v1/clientes")
 public class ClienteController {
@@ -27,6 +31,11 @@ public class ClienteController {
     private ClienteService clienteService;
 
     // obtener todos los clientes
+    @Operation(summary = "Listar todos los clientes")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Clientes obtenidos correctamente"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @GetMapping
     public ResponseEntity<List<Cliente>> listarClientes() {
         try {
@@ -38,6 +47,12 @@ public class ClienteController {
     }
 
     //obtener un cliente por ID
+    @Operation(summary = "Obtener un cliente por ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Cliente encontrado"),
+        @ApiResponse(responseCode = "404", description = "Cliente no encontrado"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerClientePorId(@PathVariable int id) {
         try {
@@ -53,6 +68,11 @@ public class ClienteController {
     }
 
     // crear un nuevo cliente
+    @Operation(summary = "Registrar un nuevo cliente")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Cliente creado exitosamente"),
+        @ApiResponse(responseCode = "400", description = "Datos inválidos")
+    })
     @PostMapping
     public ResponseEntity<?> registroCompleto(@RequestBody Cliente cliente) {
         try {
@@ -64,6 +84,11 @@ public class ClienteController {
     }
 
     //eliminar un cliente y su usuario asociado por ID (DELETE)
+    @Operation(summary = "Eliminar un cliente por ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Cliente eliminado correctamente"),
+        @ApiResponse(responseCode = "404", description = "Cliente no encontrado")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarCliente(@PathVariable int id) {
         try {
@@ -75,6 +100,11 @@ public class ClienteController {
     }
 
     // editar un cliente por ID (PUT)
+    @Operation(summary = "Actualizar un cliente por ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Cliente actualizado correctamente"),
+        @ApiResponse(responseCode = "400", description = "Error en los datos enviados")
+    })
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizarCliente(@PathVariable int id, @RequestBody Cliente cliente) {
         try {

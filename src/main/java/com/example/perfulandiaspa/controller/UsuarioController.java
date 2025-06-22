@@ -3,6 +3,8 @@ package com.example.perfulandiaspa.controller;
 import com.example.perfulandiaspa.model.Usuario;
 import com.example.perfulandiaspa.service.UsuarioService;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 @RestController
 @RequestMapping("api/v1/usuarios")
 public class UsuarioController {
@@ -27,6 +31,7 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     // obtener todos los usuarios
+    @Operation(summary = "Listar todos los usuarios")
     @GetMapping
     public ResponseEntity<List<Usuario>> listarUsuarios() {
         try {
@@ -38,6 +43,9 @@ public class UsuarioController {
     }
 
     //obtener un cliente por ID
+    @Operation(summary = "Obtener un usuario por ID")
+    @ApiResponse(responseCode = "200", description = "Usuario encontrado")
+    @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerUsuarioPorId(@PathVariable int id) {
         try {
@@ -53,6 +61,9 @@ public class UsuarioController {
     }
 
     //crear un nuevo usuario (POST)
+    @Operation(summary = "Crear un nuevo usuario")
+    @ApiResponse(responseCode = "201", description = "Usuario creado exitosamente")
+    @ApiResponse(responseCode = "400", description = "Error en los datos enviados")
     @PostMapping
     public ResponseEntity<?> crearUsuario(@RequestBody Usuario usuario) {
         try {
@@ -64,6 +75,9 @@ public class UsuarioController {
     }
 
     // eliminar un usuario por ID (DELETE)
+    @Operation(summary = "Eliminar un usuario por ID")
+    @ApiResponse(responseCode = "204", description = "Usuario eliminado exitosamente")
+    @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarUsuario(@PathVariable int id) {
         try {
@@ -75,6 +89,9 @@ public class UsuarioController {
     }
 
     // editar un usuario por ID (PUT)
+    @Operation(summary = "Actualizar un usuario por ID")
+    @ApiResponse(responseCode = "200", description = "Usuario actualizado exitosamente")
+    @ApiResponse(responseCode = "400", description = "Error en los datos enviados")
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizarUsuario(@PathVariable int id, @RequestBody Usuario usuario) {
         try {

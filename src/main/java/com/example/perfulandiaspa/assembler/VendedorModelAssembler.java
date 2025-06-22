@@ -16,9 +16,7 @@ public class VendedorModelAssembler implements RepresentationModelAssembler<Vend
     public EntityModel<Vendedor> toModel(Vendedor vendedor) {
         return EntityModel.of(vendedor,
             linkTo(methodOn(VendedorControllerV2.class).obtenerVendedorPorId(vendedor.getId())).withSelfRel(),
-            linkTo(methodOn(VendedorControllerV2.class).listarVendedores()).withRel("vendedores"),
-            linkTo(methodOn(VendedorControllerV2.class).actualizarVendedor(vendedor.getId(), null)).withRel("actualizar"),
-            linkTo(methodOn(VendedorControllerV2.class).eliminarVendedor(vendedor.getId())).withRel("eliminar")
+            linkTo(methodOn(VendedorControllerV2.class).listarVendedores()).withRel("vendedores")
         );
     }
 }

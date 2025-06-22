@@ -1,8 +1,7 @@
-package com.example.perfulandiaspa;
+package com.example.perfulandiaspa.service;
 
 import com.example.perfulandiaspa.model.Rol;
 import com.example.perfulandiaspa.repository.RolRepository;
-import com.example.perfulandiaspa.service.RolService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

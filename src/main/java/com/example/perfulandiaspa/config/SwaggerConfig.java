@@ -14,6 +14,6 @@ public class SwaggerConfig {
             .info(new Info()
                 .title("API Perfulandia")
                 .version("1.0")
-                .description("Documentación de los microservicios de usuarios, inventario y facturación"));
+                .description("Documentación del microservicio gestión de usuarios"));
     }
 }

@@ -1,12 +1,12 @@
-package com.example.perfulandiaspa;
+package com.example.perfulandiaspa.service;
 
 import com.example.perfulandiaspa.model.Vendedor;
 import com.example.perfulandiaspa.model.Rol;
 import com.example.perfulandiaspa.model.Usuario;
 import com.example.perfulandiaspa.repository.VendedorRepository;
+
 import com.example.perfulandiaspa.repository.RolRepository;
 import com.example.perfulandiaspa.repository.UsuarioRepository;
-import com.example.perfulandiaspa.service.VendedorService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

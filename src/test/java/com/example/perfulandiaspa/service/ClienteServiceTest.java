@@ -1,6 +1,5 @@
-package com.example.perfulandiaspa;
+package com.example.perfulandiaspa.service;
 
-import com.example.perfulandiaspa.service.ClienteService;
 import com.example.perfulandiaspa.model.Cliente;
 import com.example.perfulandiaspa.model.Rol;
 import com.example.perfulandiaspa.model.Usuario;

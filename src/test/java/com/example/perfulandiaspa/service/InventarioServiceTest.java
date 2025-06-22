@@ -1,9 +1,9 @@
-package com.example.perfulandiaspa;
+package com.example.perfulandiaspa.service;
 
 import com.example.perfulandiaspa.model.Inventario;
 import com.example.perfulandiaspa.model.Producto;
 import com.example.perfulandiaspa.repository.InventarioRepository;
-import com.example.perfulandiaspa.service.InventarioService;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

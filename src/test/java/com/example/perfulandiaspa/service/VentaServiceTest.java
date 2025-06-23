@@ -1,9 +1,9 @@
-package com.example.perfulandiaspa;
+package com.example.perfulandiaspa.service;
 
 import com.example.perfulandiaspa.model.Venta;
 import com.example.perfulandiaspa.model.DetalleVenta;
 import com.example.perfulandiaspa.repository.VentaRepository;
-import com.example.perfulandiaspa.service.VentaService;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.client.RestTemplate;

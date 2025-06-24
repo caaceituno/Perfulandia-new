@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class VendedorServiceTest {
@@ -33,7 +34,7 @@ public class VendedorServiceTest {
 
         vendedorService = new VendedorService(vendedorRepository);
         
-        // Inyectar los otros repositorios usando reflexión
+        // Inyectar los otros repositorios usando reflexión para modificar los campos privados de la clase VendedorService para propósitos de prueba
         try {
             var f1 = VendedorService.class.getDeclaredField("usuarioRepository");
             f1.setAccessible(true);

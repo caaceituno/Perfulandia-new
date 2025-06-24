@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.perfulandiaspa.model.Vendedor;
 import com.example.perfulandiaspa.model.Rol;
@@ -44,9 +45,20 @@ public class VendedorService {
         return vendedorRepository.save(vendedor);
     }
 
-    //eliminar un vendedor por ID
-    public void eliminarVendedor(int id) {
-        usuarioRepository.deleteById(id);
+    //eliminar un vendedor y su usuario asociado
+    @Transactional
+    public void eliminarVendedor(int vendedorId) {
+        //buscar el vendedor por su ID
+        Vendedor vendedor = vendedorRepository.findById(vendedorId)
+            .orElseThrow(() -> new RuntimeException("Vendedor no encontrado con ID: " + vendedorId));
+        //obtener el usuario asociado al vendedor
+        Usuario usuario = vendedor.getUsuario();
+        //primero eliminar el vendedor para evitar problemas
+        vendedorRepository.deleteById(vendedorId);
+        //si existe un usuario asociado se elimina
+        if (usuario != null) {
+            usuarioRepository.deleteById(usuario.getId());
+        }
     }
 
     //registro usuario y vendedor
